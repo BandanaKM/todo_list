@@ -1,3 +1,28 @@
+module Menu
+  # doctest: List the options for use
+  # >> Menu.menu
+  # => "Add\nShow\nRead from file\nWrite to file\nQuit"
+  def self.menu
+    ['Add', 'Show', 'Read from file', 'Write to file', 'Quit'].join("\n")
+  end
+
+  # doctest: Linify the menu
+  # >> Menu.show
+  # => "1: Add\n2: Show\n3: Read from file\n4: Write to file\n5: Quit"
+  def self.show
+    menu.each_line.with_index(1).map { |t, i| "#{i}: #{t}" }.join
+  end
+end
+
+module Promptable
+  def prompt(message = "Just the facts, ma'am.", symbol = ':> ')
+    puts message
+    print symbol
+    gets
+  end
+end
+include Promptable
+
 # doctest: I can initialize a List object
 # >> List.new.class
 # => List
@@ -25,6 +50,21 @@ class List
   # => "Add something to the master list\nFix faucet"
   def add(task)
     @all_tasks << task
+  end
+
+  # doctest: Delete a single task
+  # >> ml = List.new
+  # Set up the things that we want on the list, in this case
+  # just words, one word for each "task""
+  # >> things = %w[cookie brownie spinach cake pie]
+  # and now we collect the things into our task list.
+  # >> things.map {|t| ml.add(t) }
+  # >> ml.delete(3)
+  # => 'spinach'
+  # >> ml.show.include?('spinach')
+  # =>  false
+  def delete(task_number)
+    @all_tasks.delete_at(task_number - 1)
   end
 
   def show
@@ -57,31 +97,6 @@ class Task
 
   # clarify to_s
 end
-
-module Menu
-  # doctest: List the options for use
-  # >> Menu.menu
-  # => "Add\nShow\nRead from file\nWrite to file\nQuit"
-  def self.menu
-    ['Add', 'Show', 'Read from file', 'Write to file', 'Quit'].join("\n")
-  end
-
-  # doctest: Linify the menu
-  # >> Menu.show
-  # => "1: Add\n2: Show\n3: Read from file\n4: Write to file\n5: Quit"
-  def self.show
-    menu.each_line.with_index(1).map { |t, i| "#{i}: #{t}" }.join
-  end
-end
-
-module Promptable
-  def prompt(message = "Just the facts, ma'am.", symbol = ':> ')
-    puts message
-    print symbol
-    gets
-  end
-end
-include Promptable
 
 if __FILE__ == $PROGRAM_NAME
   ml = List.new
