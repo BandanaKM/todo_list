@@ -9,6 +9,8 @@ class List
     @all_tasks = Array.new
   end
 
+    # the initialize method constructs the data structure
+
   # doctest: Add a task
   # >> ml =  List.new
   # >> ml.add(Task.new('Add something to the master list')).length
@@ -39,6 +41,9 @@ class List
       add(Task.new(line.chomp))
     end
   end
+
+ #menu items 
+
 end
 
 class Task
@@ -51,6 +56,8 @@ class Task
   def to_s
     description
   end
+
+  #clarify to_s
 
 end
 
@@ -101,6 +108,6 @@ if __FILE__ == $PROGRAM_NAME
 end
 
 
-## Reading in a file to make a new list
-#
+# update a task
+# delete a task
 
