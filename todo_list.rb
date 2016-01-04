@@ -39,15 +39,9 @@ class List
   # >> ml =  List.new
   # >> ml.add(Task.new('Add something to the master list')).length
   # => 1
-  # doctest: Show the task
-  # >> ml.show
-  # => 'Add something to the master list'
   # doctest: Add a another task to the List
   # >> ml.add(Task.new('Fix faucet')).length
   # => 2
-  # doctest: Show multiple tasks (all the tasks)
-  # >> ml.show
-  # => "Add something to the master list\nFix faucet"
   def add(task)
     @all_tasks << task
   end
@@ -67,6 +61,16 @@ class List
     @all_tasks.delete_at(task_number - 1)
   end
 
+  # doctest: Show the task
+  # >> ml =  List.new
+  # >> ml.add(Task.new('Add something to the master list')).length
+  # => 1
+  # >> ml.show
+  # => 'Add something to the master list'
+  # doctest: Show multiple tasks (all the tasks)
+  # >> ml.add(Task.new('Fix faucet')).length
+  # >> ml.show
+  # => "Add something to the master list\nFix faucet"
   def show
     all_tasks.collect(&:to_s).join("\n")
   end
@@ -91,6 +95,7 @@ class Task
     @description = description
   end
 
+  # to represent the task as a string
   def to_s
     description
   end
