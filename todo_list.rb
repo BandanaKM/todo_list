@@ -61,6 +61,22 @@ class List
     @all_tasks.delete_at(task_number - 1)
   end
 
+  # doctest: Update the task
+  # >> ml = List.new
+  # >> things = %w[cookie brownie spinach cake pie]
+  # >> things.map {|t| ml.add(t) }
+  # >> ml.update(3, Task.new('jello'))
+  # doctest: while updating we drop the old
+  # >> ml.show.include?('spinach')
+  # => false
+  # doctest: and bring in the new
+  # >> ml.show.include?('jello')
+  # => true
+  def update(task_number, task)
+    @all_tasks[task_number - 1] = task
+  end
+
+
   # doctest: Show the task
   # >> ml =  List.new
   # >> ml.add(Task.new('Add something to the master list')).length
