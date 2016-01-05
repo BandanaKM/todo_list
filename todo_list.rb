@@ -80,12 +80,13 @@ class List
   # >> ml =  List.new
   # >> ml.add(Task.new('Add something to the master list')).length
   # => 1
-  # >> ml.show
-  # => 'Add something to the master list'
+  # >> ml.show.empty?
+  # => false
   # doctest: Show multiple tasks (all the tasks)
   # >> ml.add(Task.new('Fix faucet')).length
-  # >> ml.show
-  # => "Add something to the master list\nFix faucet"
+  # => 2
+  # >> ml.show.split(/\n/).all? {|s| !s.empty?}
+  # =>true
   def show
     all_tasks.collect(&:to_s).join("\n")
   end
@@ -105,14 +106,36 @@ end
 
 class Task
   attr_reader :description
+  attr_accessor :complete
 
   def initialize(description)
     @description = description
+    @complete = false
   end
+
+  # doctest: task responds to complete
+  # >> Task.allocate.respond_to?(:complete)
+  # => true
+  # doctest: By default my task is incomplete
+  # >> mt = Task.new('Make a task')
+  # >> mt.complete
+  # => false
+  # doctest: I can set the task as complete
+  # >> mt.complete = true
+  # >> mt.complete
+  # => true
+  alias :status :complete
 
   # to represent the task as a string
   def to_s
-    description
+    "#{represent_status} : #{description}"
+  end
+
+  def represent_status
+    "#{complete? ? '[X]' : '[ ]'}"
+  end
+  def complete?
+    self.complete
   end
 
   # clarify to_s
