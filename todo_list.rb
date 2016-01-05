@@ -87,18 +87,29 @@ class List
   # => 2
   # >> ml.show.split(/\n/).all? {|s| !s.empty?}
   # =>true
-  def show
-    all_tasks.collect(&:to_s).join("\n")
+  def show(linify: true)
+    result = linify ? linify(task_report) : task_report
+    result.join("\n")
   end
 
   def write_to_file(filename)
-    IO.write(filename, show)
+    IO.write(filename, show(linify: false))
   end
 
   def read_from_file(filename)
     IO.readlines(filename).each do |line|
       add(Task.new(line.chomp))
     end
+  end
+
+  private
+
+  def linify(text)
+    text.map.with_index { |l, i| "(#{i.next}): #{l}" }
+  end
+
+  def task_report
+    all_tasks.collect(&:to_s)
   end
 
   # menu items
@@ -134,8 +145,9 @@ class Task
   def represent_status
     "#{complete? ? '[X]' : '[ ]'}"
   end
+
   def complete?
-    self.complete
+    complete
   end
 
   # clarify to_s
