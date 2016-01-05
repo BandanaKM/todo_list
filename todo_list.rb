@@ -76,7 +76,6 @@ class List
     @all_tasks[task_number - 1] = task
   end
 
-
   # doctest: Show the task
   # >> ml =  List.new
   # >> ml.add(Task.new('Add something to the master list')).length
@@ -141,7 +140,7 @@ if __FILE__ == $PROGRAM_NAME
     else
       puts 'Try again, I did not udnerstand.'
     end
-    prompt("Press enter to continue", '')
+    prompt('Press enter to continue', '')
   end
   puts 'Outro - Thanks for using the awesome Bandana Malik Menuing System!'
 end
