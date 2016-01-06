@@ -76,23 +76,24 @@ class List
     @all_tasks[task_number - 1] = task
   end
 
-
   # doctest: Show the task
   # >> ml =  List.new
   # >> ml.add(Task.new('Add something to the master list')).length
   # => 1
-  # >> ml.show
-  # => 'Add something to the master list'
+  # >> ml.show.empty?
+  # => false
   # doctest: Show multiple tasks (all the tasks)
   # >> ml.add(Task.new('Fix faucet')).length
-  # >> ml.show
-  # => "Add something to the master list\nFix faucet"
-  def show
-    all_tasks.collect(&:to_s).join("\n")
+  # => 2
+  # >> ml.show.split(/\n/).all? {|s| !s.empty?}
+  # =>true
+  def show(linify: true)
+    result = linify ? linify(task_report) : task_report
+    result.join("\n")
   end
 
   def write_to_file(filename)
-    IO.write(filename, show)
+    IO.write(filename, show(linify: false))
   end
 
   def read_from_file(filename)
@@ -101,19 +102,52 @@ class List
     end
   end
 
+  private
+
+  def linify(text)
+    text.map.with_index { |l, i| "(#{i.next}): #{l}" }
+  end
+
+  def task_report
+    all_tasks.collect(&:to_s)
+  end
+
   # menu items
 end
 
 class Task
   attr_reader :description
+  attr_accessor :complete
 
   def initialize(description)
     @description = description
+    @complete = false
   end
+
+  # doctest: task responds to complete
+  # >> Task.allocate.respond_to?(:complete)
+  # => true
+  # doctest: By default my task is incomplete
+  # >> mt = Task.new('Make a task')
+  # >> mt.complete
+  # => false
+  # doctest: I can set the task as complete
+  # >> mt.complete = true
+  # >> mt.complete
+  # => true
+  alias :status :complete
 
   # to represent the task as a string
   def to_s
-    description
+    "#{represent_status} : #{description}"
+  end
+
+  def represent_status
+    "#{complete? ? '[X]' : '[ ]'}"
+  end
+
+  def complete?
+    complete
   end
 
   # clarify to_s
@@ -141,7 +175,7 @@ if __FILE__ == $PROGRAM_NAME
     else
       puts 'Try again, I did not udnerstand.'
     end
-    prompt("Press enter to continue", '')
+    prompt('Press enter to continue', '')
   end
   puts 'Outro - Thanks for using the awesome Bandana Malik Menuing System!'
 end
