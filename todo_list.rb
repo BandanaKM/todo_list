@@ -18,7 +18,7 @@ module Promptable
   def prompt(message = "Just the facts, ma'am.", symbol = ':> ')
     puts message
     print symbol
-    gets
+    gets.chomp
   end
 end
 include Promptable
@@ -93,12 +93,15 @@ class List
   end
 
   def write_to_file(filename)
-    IO.write(filename, show(linify: false))
+    machinified = @all_tasks.map(&:to_machine).join("\n")
+    IO.write(filename, machinified)
   end
 
   def read_from_file(filename)
     IO.readlines(filename).each do |line|
-      add(Task.new(line.chomp))
+      status, *description = line.split(':')
+      status = status.include?('X')
+      add(Task.new(description.join(':').strip, status))
     end
   end
 
@@ -119,9 +122,9 @@ class Task
   attr_reader :description
   attr_accessor :complete
 
-  def initialize(description)
+  def initialize(description, completed_status = false)
     @description = description
-    @complete = false
+    @complete = completed_status
   end
 
   # doctest: task responds to complete
@@ -142,12 +145,25 @@ class Task
     "#{represent_status} : #{description}"
   end
 
-  def represent_status
-    "#{complete? ? '[X]' : '[ ]'}"
+  def to_machine
+    "#{represent_status}:#{description}"
   end
 
-  def complete?
+  def represent_status
+    "#{completed? ? '[X]' : '[ ]'}"
+  end
+
+  def completed?
     complete
+  end
+
+  # doctest: I can toggle the status of a task
+  # >> mt.toggle_status
+  # => false
+  # >> mt.toggle_status
+  # => true
+  def toggle_status
+    self.complete = !completed?
   end
 
   # clarify to_s
@@ -161,7 +177,7 @@ if __FILE__ == $PROGRAM_NAME
     puts Menu.show
     case user_input
     when 1
-      ml.add(prompt('What is the task you would like to accomplish?').chomp)
+      ml.add(Task.new(prompt('What is the task you would like to accomplish?')))
     when 2
       puts ml.show
     when 3
@@ -173,7 +189,7 @@ if __FILE__ == $PROGRAM_NAME
       filename = gets.chomp
       ml.write_to_file(filename)
     else
-      puts 'Try again, I did not udnerstand.'
+      puts 'Try again, I did not understand.'
     end
     prompt('Press enter to continue', '')
   end
