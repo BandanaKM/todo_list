@@ -1,22 +1,31 @@
 module Menu
   # doctest: List the options for use
-  # >> Menu.menu
-  # => "Add\nShow\nRead from file\nWrite to file\nQuit"
+  # >> Menu.menu.is_a?(String)
+  # => true
   def self.menu
-    ['Add', 'Show', 'Read from file', 'Write to file', 'Quit'].join("\n")
+    " Welcome to Bandana's Awesome Menuing System!
+    This menu will help you use the Task List System
+    1) Add
+    2) Show
+    3) Update
+    4) Delete
+    5) Write to File
+    6) Read from File
+    7) Toggle Status
+    Q) Quit "
   end
 
   # doctest: Linify the menu
-  # >> Menu.show
-  # => "1: Add\n2: Show\n3: Read from file\n4: Write to file\n5: Quit"
+  # >> Menu.show.include?('2')
+  # => true
   def self.show
-    menu.each_line.with_index(1).map { |t, i| "#{i}: #{t}" }.join
+    self.menu
   end
 end
 
 module Promptable
   def prompt(message = "Just the facts, ma'am.", symbol = ':> ')
-    puts message
+    print message
     print symbol
     gets.chomp
   end
@@ -172,22 +181,16 @@ end
 if __FILE__ == $PROGRAM_NAME
   ml = List.new
   puts 'Please choose from the following list'
-  # A prompting method can clean this duplication up nicely
-  until 5 == user_input = prompt(Menu.show).to_i
-    puts Menu.show
+  until ['q', '5'].include?(user_input = prompt(Menu.show).downcase)
     case user_input
-    when 1
+    when '1'
       ml.add(Task.new(prompt('What is the task you would like to accomplish?')))
-    when 2
+    when '2'
       puts ml.show
-    when 3
-      puts 'What is the filename to read from?'
-      filename = gets.chomp
-      ml.read_from_file(filename)
-    when 4
-      puts 'What is the filename to write to?'
-      filename = gets.chomp
-      ml.write_to_file(filename)
+    when '3'
+      ml.read_from_file(prompt('What is the filename to read from?'))
+    when '4'
+      ml.write_to_file(prompt 'What is the filename to write to?')
     else
       puts 'Try again, I did not understand.'
     end
