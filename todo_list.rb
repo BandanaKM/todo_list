@@ -52,7 +52,7 @@ class List
   # >> ml.add(Task.new('Fix faucet')).length
   # => 2
   def add(task)
-    @all_tasks << task
+    all_tasks << task
   end
 
   # doctest: Delete a single task
@@ -67,7 +67,7 @@ class List
   # >> ml.show.include?('spinach')
   # =>  false
   def delete(task_number)
-    @all_tasks.delete_at(task_number - 1)
+    all_tasks.delete_at(task_number - 1)
   end
 
   # doctest: Update the task
@@ -82,7 +82,7 @@ class List
   # >> ml.show.include?('jello')
   # => true
   def update(task_number, task)
-    @all_tasks[task_number - 1] = task
+    all_tasks[task_number - 1] = task
   end
 
   # doctest: Show the task
@@ -112,6 +112,10 @@ class List
       status = status.include?('X')
       add(Task.new(description.join(':').strip, status))
     end
+  end
+
+  def toggle(task_number)
+    all_tasks[task_number - 1].toggle_status
   end
 
   private
@@ -188,15 +192,21 @@ if __FILE__ == $PROGRAM_NAME
     when '2'
       puts ml.show
     when '3'
-      puts "Functionality not implemented yet"
+      ml.update(prompt('Which task to update?').to_i, Task.new(prompt("Task Description?")))
     when '4'
-      puts "Functionality not implemented yet"
+      puts ml.show
+      ml.delete(prompt('Which task to delete?').to_i)
     when '5'
       ml.write_to_file(prompt 'What is the filename to write to?')
     when '6'
-      ml.read_from_file(prompt('What is the filename to read from?'))
+      begin
+        ml.read_from_file(prompt('What is the filename to read from?'))
+      rescue Errno::ENOENT
+        puts "File name not found, please verify your file name and path."
+      end
     when '7'
-      puts "Functionality not implemented yet"
+      puts ml.show
+      ml.toggle(prompt('Which would you like to toggle the status for?').to_i)
     else
       puts 'Try again, I did not understand.'
     end
