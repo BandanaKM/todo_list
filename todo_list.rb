@@ -181,16 +181,22 @@ end
 if __FILE__ == $PROGRAM_NAME
   ml = List.new
   puts 'Please choose from the following list'
-  until ['q', '5'].include?(user_input = prompt(Menu.show).downcase)
+  until ['q'].include?(user_input = prompt(Menu.show).downcase)
     case user_input
     when '1'
       ml.add(Task.new(prompt('What is the task you would like to accomplish?')))
     when '2'
       puts ml.show
     when '3'
-      ml.read_from_file(prompt('What is the filename to read from?'))
+      puts "Functionality not implemented yet"
     when '4'
+      puts "Functionality not implemented yet"
+    when '5'
       ml.write_to_file(prompt 'What is the filename to write to?')
+    when '6'
+      ml.read_from_file(prompt('What is the filename to read from?'))
+    when '7'
+      puts "Functionality not implemented yet"
     else
       puts 'Try again, I did not understand.'
     end
