@@ -3,7 +3,7 @@ module Menu
   # >> Menu.menu.is_a?(String)
   # => true
   def self.menu
-    " Welcome to Bandana's Awesome Menuing System!
+    " Welcome to the TodoLister Program!
     This menu will help you use the Task List System
     1) Add
     2) Show
@@ -212,5 +212,5 @@ if __FILE__ == $PROGRAM_NAME
     end
     prompt('Press enter to continue', '')
   end
-  puts 'Outro - Thanks for using the awesome Bandana Malik Menuing System!'
+  puts 'Outro - Thanks for using the awesome Frederico Menuing System!'
 end
