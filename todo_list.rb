@@ -154,27 +154,32 @@ class Task
 end
 
 if __FILE__ == $PROGRAM_NAME
+  menu = {
+    1 => lambda do |list|
+      list.add(
+        prompt('What is the task you would like to accomplish?').chomp
+      )
+    end,
+    2 => lambda do |list|
+      puts list.show
+    end,
+    3 => lambda do |list|
+      list.read_from_file(
+        prompt('What is the filename to read from?').chomp
+      )
+    end,
+    4 => lambda do |list|
+      list.write_to_file(
+        prompt('What is the filename to write to?').chomp
+      )
+    end
+  }
+  menu.default = ->(*) { puts 'I did not understand' }
   ml = List.new
   puts 'Please choose from the following list'
-  # A prompting method can clean this duplication up nicely
   until 5 == user_input = prompt(Menu.show).to_i
     puts Menu.show
-    case user_input
-    when 1
-      ml.add(prompt('What is the task you would like to accomplish?').chomp)
-    when 2
-      puts ml.show
-    when 3
-      puts 'What is the filename to read from?'
-      filename = gets.chomp
-      ml.read_from_file(filename)
-    when 4
-      puts 'What is the filename to write to?'
-      filename = gets.chomp
-      ml.write_to_file(filename)
-    else
-      puts 'Try again, I did not udnerstand.'
-    end
+    menu[user_input][ml]
     prompt('Press enter to continue', '')
   end
   puts 'Outro - Thanks for using the awesome Bandana Malik Menuing System!'
