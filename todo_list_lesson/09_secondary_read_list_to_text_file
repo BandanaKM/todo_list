@@ -1,0 +1,77 @@
+```
+User Story 5: As a user I can read a todo list from a text file
+```
+
+Great work. We now have the ability to save a list to a text file. 
+
+
+1. Create method `read_from_file` that takes a filename as an argument, as reads each line from a file.  
+
+
+```
+def read_from_file(filename)
+  IO.readlines(filename).each do |line|
+    add(Task.new(line))
+  end
+end
+
+
+# The `IO` class has a public Class method called `#readlines`, which takes a file as an argument.Together, `IO.readlines(filename)` is an array of all lines in a file. 
+
+Here, we read through the lines in a file, and output them one at a time. 
+
+```
+
+2. Nice work. Now let's ass the the `Read from File` option the the module Menu. 
+
+```
+module Menu
+
+  def self.menu
+    " Welcome to the TodoLister Program!
+    This menu will help you use the Task List System
+    1) Add
+    2) Show
+    3) Write to File
+    4) Read from File
+    Q) Quit "
+  end
+
+...
+
+```
+
+
+3. Let's add the show method the the menu. 
+
+Similar to the `write_to_file` method, the `read_from_file` method takes a filename as an argument, so we will need to prompt users for a filename to read from. 
+
+
+if __FILE__ == $PROGRAM_NAME
+  ml = List.new
+  puts 'Please choose from the following list'
+  until ['q'].include?(user_input = prompt(Menu.show).downcase)
+    case user_input
+    when '1'
+      ml.add(Task.new(prompt('What is the task you would like to accomplish?')))
+    when '2'
+      puts ml.show
+    when '3'
+      ml.write_to_file(prompt 'What is the filename to write to?')
+    when '4'
+      begin
+        ml.read_from_file(prompt('What is the filename to read from?'))
+      rescue Errno::ENOENT
+        puts "File name not found, please verify your file name and path."
+      end
+    else
+      puts 'Try again, I did not understand.'
+    end
+    prompt('Press enter to continue', '')
+  end
+  puts 'Outro - Thanks for using the awesome Frederico Menuing System!'
+end
+
+
+
+4. Run the program. 
